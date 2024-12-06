@@ -10,11 +10,18 @@ import { usePrice } from "./priceContext"; // Assuming you're using a PriceConte
 // Context value type definition
 interface AlarmsContextType {
   alarms: Array<IAlarm>;
+}
+
+interface AlarmsDispatchContextType {
   addAlarm: (price: number, type: "above" | "below") => void;
   removeAlarm: (id: number) => void;
 }
 
 const AlarmsContext = createContext<AlarmsContextType | undefined>(undefined);
+
+const AlarmsDispatchContext = createContext<
+  AlarmsDispatchContextType | undefined
+>(undefined);
 
 interface AlarmsProviderProps {
   children: ReactNode;
@@ -52,8 +59,10 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
   }, [price, alarms]);
 
   return (
-    <AlarmsContext.Provider value={{ alarms, addAlarm, removeAlarm }}>
-      {children}
+    <AlarmsContext.Provider value={{ alarms }}>
+      <AlarmsDispatchContext.Provider value={{ addAlarm, removeAlarm }}>
+        {children}
+      </AlarmsDispatchContext.Provider>
     </AlarmsContext.Provider>
   );
 };
@@ -62,6 +71,14 @@ export const useAlarms = (): AlarmsContextType => {
   const context = useContext(AlarmsContext);
   if (!context) {
     throw new Error("useAlarms must be used within an AlarmsProvider");
+  }
+  return context;
+};
+
+export const useAlarmsDispatch = (): AlarmsDispatchContextType => {
+  const context = useContext(AlarmsDispatchContext);
+  if (!context) {
+    throw new Error("useAlarmsDispatch must be used within an AlarmsProvider");
   }
   return context;
 };

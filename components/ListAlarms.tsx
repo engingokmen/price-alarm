@@ -5,13 +5,15 @@ import { useAlarms } from "@/context/alarmsContext";
 export const ListAlarms = () => {
   const { alarms } = useAlarms();
 
+  console.log("alarms", alarms);
+
   return (
     <FlatList
       data={alarms}
       renderItem={({ item }) => {
-        console.log("alarm", item);
         return <DisplayAlarm data={item} />;
       }}
+      style={{ marginTop: 24 }}
     />
   );
 };
