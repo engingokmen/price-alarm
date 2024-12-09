@@ -24,7 +24,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
+      ["expo-router"],
       [
         "expo-splash-screen",
         {
@@ -32,6 +32,19 @@
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./local/assets/notification_icon.png",
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "sounds": [
+            "assets/sounds/sound1.wav",
+            "assets/sounds/sound2.wav",
+            "assets/sounds/sound3.wav"
+          ]
         }
       ]
     ],

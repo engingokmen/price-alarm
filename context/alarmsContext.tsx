@@ -9,6 +9,8 @@ import React, {
 } from "react";
 import { usePrice } from "./priceContext"; // Assuming you're using a PriceContext for price updates
 import { IAlarm } from "@/types";
+import { PermissionStatus } from "expo-modules-core";
+import * as Notifications from "expo-notifications";
 
 // Context value type definition
 interface AlarmsContextType {
@@ -30,7 +32,19 @@ interface AlarmsProviderProps {
   children: ReactNode;
 }
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    };
+  },
+});
+
 export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
+  const [notificationPermissions, setNotificationPermissions] =
+    useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
   const [alarms, setAlarms] = useState<IAlarm[]>([]);
   const price = usePrice(); // Live price from PriceContext
 
@@ -39,6 +53,7 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
       id: Date.now(),
       price,
       type,
+      isDone: false,
     };
     setAlarms((prevAlarms) => [...prevAlarms, newAlarm]);
   }, []);
@@ -46,6 +61,28 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
   const removeAlarm = useCallback((id: number) => {
     setAlarms((prevAlarms) => prevAlarms.filter((alarm) => alarm.id !== id));
   }, []);
+
+  const requestNotificationPermissions = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    setNotificationPermissions(status);
+    return status;
+  };
+
+  const handleNotification = (notification: Notifications.Notification) => {
+    const { title } = notification.request.content;
+    console.warn(title);
+  };
+
+  useEffect(() => {
+    requestNotificationPermissions();
+  }, []);
+
+  useEffect(() => {
+    if (notificationPermissions !== PermissionStatus.GRANTED) return;
+    const listener =
+      Notifications.addNotificationReceivedListener(handleNotification);
+    return () => listener.remove();
+  }, [notificationPermissions]);
 
   useEffect(() => {
     if (price === null) return;
@@ -55,7 +92,13 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
         (alarm.type === "above" && price >= alarm.price) ||
         (alarm.type === "below" && price <= alarm.price)
       ) {
-        alert(`Price Alert: Bitcoin is ${alarm.type} $${alarm.price}`);
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: alarm.price.toString(),
+            body: `Price is now ${price}`,
+          },
+          trigger: null,
+        });
         removeAlarm(alarm.id); // Optionally remove the alarm after triggering
       }
     });
