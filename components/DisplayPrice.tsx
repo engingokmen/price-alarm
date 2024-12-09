@@ -8,6 +8,7 @@ interface DisplayPriceProps {
   lightColor?: string;
   darkColor?: string;
   children?: ReactNode;
+  style?: object;
 }
 
 export const DisplayPrice = ({
@@ -15,11 +16,12 @@ export const DisplayPrice = ({
   fontSize = 42,
   lightColor,
   darkColor,
+  style = {},
 }: DisplayPriceProps) => {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "price");
   const formattedNumber = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
   }).format(price);
 
-  return <Text style={{ fontSize, color }}>{formattedNumber}</Text>;
+  return <Text style={[{ fontSize, color }, style]}>{formattedNumber}</Text>;
 };

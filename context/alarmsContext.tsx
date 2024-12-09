@@ -4,8 +4,11 @@ import React, {
   useContext,
   useEffect,
   ReactNode,
+  useCallback,
+  useMemo,
 } from "react";
 import { usePrice } from "./priceContext"; // Assuming you're using a PriceContext for price updates
+import { IAlarm } from "@/types";
 
 // Context value type definition
 interface AlarmsContextType {
@@ -31,18 +34,18 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
   const [alarms, setAlarms] = useState<IAlarm[]>([]);
   const price = usePrice(); // Live price from PriceContext
 
-  const addAlarm = (price: number, type: "above" | "below") => {
+  const addAlarm = useCallback((price: number, type: "above" | "below") => {
     const newAlarm: IAlarm = {
       id: Date.now(),
       price,
       type,
     };
     setAlarms((prevAlarms) => [...prevAlarms, newAlarm]);
-  };
+  }, []);
 
-  const removeAlarm = (id: number) => {
+  const removeAlarm = useCallback((id: number) => {
     setAlarms((prevAlarms) => prevAlarms.filter((alarm) => alarm.id !== id));
-  };
+  }, []);
 
   useEffect(() => {
     if (price === null) return;
@@ -58,8 +61,10 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
     });
   }, [price, alarms]);
 
+  const alarmsValue = useMemo(() => ({ alarms }), [alarms]);
+
   return (
-    <AlarmsContext.Provider value={{ alarms }}>
+    <AlarmsContext.Provider value={alarmsValue}>
       <AlarmsDispatchContext.Provider value={{ addAlarm, removeAlarm }}>
         {children}
       </AlarmsDispatchContext.Provider>
