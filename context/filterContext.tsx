@@ -4,14 +4,14 @@ interface FiltersContextType {
   search: string;
   showFavorites: boolean;
   setSearch: (search: string) => void;
-  setShowFavorites: (showFavorites: boolean) => void;
+  toggleShowFavorites: () => void;
 }
 
 export const FiltersContext = createContext<FiltersContextType>({
   search: "",
   showFavorites: false,
   setSearch: () => {},
-  setShowFavorites: () => {},
+  toggleShowFavorites: () => {},
 });
 
 export const useFilters = () => {
@@ -29,12 +29,15 @@ interface FiltersProviderProps {
 export const FiltersProvider = ({ children }: FiltersProviderProps) => {
   const [search, setSearch] = useState<string>("");
   const [showFavorites, setShowFavorites] = useState<boolean>(false);
+  const toggleShowFavorites = () => {
+    setShowFavorites((prev) => !prev);
+  };
 
   const filters = {
     search,
     showFavorites,
     setSearch,
-    setShowFavorites,
+    toggleShowFavorites,
   };
 
   return (

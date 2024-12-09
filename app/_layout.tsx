@@ -1,3 +1,4 @@
+import { HeaderRight } from "@/components/HeaderRight";
 import { AlarmsProvider } from "@/context/alarmsContext";
 import { CoinsProvider } from "@/context/coinsContext";
 import { FavoritesProvider } from "@/context/favoritesContext";
@@ -15,6 +16,7 @@ export default function RootLayout() {
               <Stack
                 screenOptions={{
                   headerShown: false,
+                  headerRight: () => <HeaderRight />,
                 }}
               >
                 {/* Optionally configure static options outside the route.*/}

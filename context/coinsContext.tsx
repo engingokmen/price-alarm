@@ -1,6 +1,7 @@
 import { ICoin } from "@/types";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useFilters } from "./filterContext";
+import { useFavorites } from "./favoritesContext";
 
 export const CoinsContext = createContext<CoinsContextType | undefined>(
   undefined
@@ -20,11 +21,22 @@ export const useCoins = () => {
 
 export const useCoinsFiltered = () => {
   const { coins } = useCoins();
-  const { search } = useFilters();
+  const { search, showFavorites } = useFilters();
+  const { favorites } = useFavorites();
 
-  const filteredCoins = coins.filter((coin) =>
-    coin.symbol.toLowerCase().includes(search.toLowerCase())
-  );
+  const favoriteCoins = (coins: Array<ICoin>) => {
+    if (!showFavorites) return coins;
+    return coins.filter((coin) => favorites.includes(coin.symbol));
+  };
+  const searchedCoins = (coins: Array<ICoin>) => {
+    if (search === "") return coins;
+
+    return coins.filter((coin) =>
+      coin.symbol.toLowerCase().includes(search.toLowerCase())
+    );
+  };
+
+  const filteredCoins = searchedCoins(favoriteCoins(coins));
 
   return { coins: filteredCoins };
 };

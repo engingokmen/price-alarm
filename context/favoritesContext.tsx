@@ -4,12 +4,14 @@ interface FavoritesContextType {
   favorites: string[];
   addFavorite: (symbol: string) => void;
   removeFavorite: (symbol: string) => void;
+  isFavorite: (symbol: string) => boolean;
 }
 
 export const FavoritesContext = createContext<FavoritesContextType>({
   favorites: [],
   addFavorite: () => {},
   removeFavorite: () => {},
+  isFavorite: () => false,
 });
 
 interface FavoritesProviderProps {
@@ -27,9 +29,11 @@ export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
     setFavorites((prev) => prev.filter((fav) => fav !== symbol));
   };
 
+  const isFavorite = (symbol: string) => favorites.includes(symbol);
+
   return (
     <FavoritesContext.Provider
-      value={{ favorites, addFavorite, removeFavorite }}
+      value={{ favorites, addFavorite, removeFavorite, isFavorite }}
     >
       {children}
     </FavoritesContext.Provider>
