@@ -96,6 +96,7 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
           content: {
             title: alarm.price.toString(),
             body: `Price is now ${price}`,
+            sound: "sound1.wav",
           },
           trigger: null,
         });
