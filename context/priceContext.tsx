@@ -4,12 +4,13 @@ import {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
 } from "react";
 
-const PriceContext = createContext(0);
+const PriceContext = createContext<{ price: number | null }>({ price: null });
 
 export const PriceProvider = ({ children }: { children: ReactNode }) => {
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number | null>(null);
 
   useEffect(() => {
     const ws = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@trade");
@@ -34,8 +35,12 @@ export const PriceProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const value = useMemo(() => price, [price]);
+
   return (
-    <PriceContext.Provider value={price}>{children}</PriceContext.Provider>
+    <PriceContext.Provider value={{ price: value }}>
+      {children}
+    </PriceContext.Provider>
   );
 };
 

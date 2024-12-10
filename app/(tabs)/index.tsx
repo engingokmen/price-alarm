@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
 
 export default function HomeScreen() {
-  const price = usePrice();
+  const { price } = usePrice();
 
   useEffect(() => {
     activateKeepAwakeAsync();

@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { DisplayPrice } from "./DisplayPrice";
+import { IAlarm } from "@/types";
 
 export const DisplayAlarm = ({ data }: { data: IAlarm }) => {
   const icon = data.type === "above" ? "arrow-up" : "arrow-down";
@@ -18,8 +19,10 @@ export const DisplayAlarm = ({ data }: { data: IAlarm }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 8,
-    gap: 24,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    height: 100,
+    width: "100%",
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",

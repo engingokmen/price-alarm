@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
 import { usePrice } from "@/context/priceContext";
-import { useAlarms, useAlarmsDispatch } from "@/context/alarmsContext";
+import { useAlarmsDispatch } from "@/context/alarmsContext";
 
 export const SetAlarm = () => {
   const [number, onChangeNumber] = useState("");
 
-  const price = usePrice();
+  const { price } = usePrice();
   const { addAlarm } = useAlarmsDispatch();
 
   const handleSubmitAlarm = () => {
@@ -24,6 +24,7 @@ export const SetAlarm = () => {
         value={number}
         placeholder="Alarm price"
         keyboardType="numeric"
+        autoFocus
       />
       <Button
         title="Set alarm"

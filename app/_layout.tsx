@@ -23,7 +23,7 @@ export default function RootLayout() {
                 {/* <Stack.Screen name="home" options={{}} /> */}
                 <Stack.Screen name="(tabs)" />
                 <Stack.Screen
-                  name="modal"
+                  name="add-alarm"
                   options={{
                     presentation: "modal",
                   }}

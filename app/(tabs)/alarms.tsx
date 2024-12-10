@@ -5,6 +5,7 @@ export default function Alarms() {
   return (
     <View
       style={{
+        width: "100%",
         flex: 1,
         justifyContent: "center",
         alignItems: "center",

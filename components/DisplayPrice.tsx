@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { Text } from "react-native";
 
 interface DisplayPriceProps {
-  price: number;
+  price: number | null;
   fontSize?: number;
   lightColor?: string;
   darkColor?: string;
@@ -19,9 +19,11 @@ export const DisplayPrice = ({
   style = {},
 }: DisplayPriceProps) => {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "price");
-  const formattedNumber = new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-  }).format(price);
+  const formattedNumber = price
+    ? new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 2,
+      }).format(price)
+    : "0.00";
 
   return <Text style={[{ fontSize, color }, style]}>{formattedNumber}</Text>;
 };

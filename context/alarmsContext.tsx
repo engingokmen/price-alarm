@@ -11,6 +11,7 @@ import { usePrice } from "./priceContext"; // Assuming you're using a PriceConte
 import { IAlarm } from "@/types";
 import { PermissionStatus } from "expo-modules-core";
 import * as Notifications from "expo-notifications";
+import { useAsyncStorage } from "@/hooks/useAsyncStorage";
 
 // Context value type definition
 interface AlarmsContextType {
@@ -43,10 +44,10 @@ Notifications.setNotificationHandler({
 });
 
 export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
+  const { alarms, setAlarms } = useAsyncStorage();
   const [notificationPermissions, setNotificationPermissions] =
     useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
-  const [alarms, setAlarms] = useState<IAlarm[]>([]);
-  const price = usePrice(); // Live price from PriceContext
+  const { price } = usePrice(); // Live price from PriceContext
 
   const addAlarm = useCallback((price: number, type: "above" | "below") => {
     const newAlarm: IAlarm = {
@@ -60,6 +61,14 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
 
   const removeAlarm = useCallback((id: number) => {
     setAlarms((prevAlarms) => prevAlarms.filter((alarm) => alarm.id !== id));
+  }, []);
+
+  const disableAlarm = useCallback((id: number) => {
+    setAlarms((prevAlarms) =>
+      prevAlarms.map((alarm) =>
+        alarm.id === id ? { ...alarm, isDone: true } : alarm
+      )
+    );
   }, []);
 
   const requestNotificationPermissions = async () => {
@@ -100,7 +109,7 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
           },
           trigger: null,
         });
-        removeAlarm(alarm.id); // Optionally remove the alarm after triggering
+        disableAlarm(alarm.id); // Optionally remove the alarm after triggering
       }
     });
   }, [price, alarms]);

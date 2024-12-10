@@ -3,8 +3,8 @@ import { SetAlarm } from "@/components/SetAlarm";
 import { usePrice } from "@/context/priceContext";
 import { Text, View } from "react-native";
 
-export default function Alarms() {
-  const price = usePrice();
+export default function addAlarm() {
+  const { price } = usePrice();
 
   return (
     <View
