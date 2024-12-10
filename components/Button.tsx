@@ -8,8 +8,13 @@ interface ButtonProps extends PressableProps {
 
 export default function Button(props: ButtonProps) {
   const { title = "Save", style = {} as any, ...rest } = props;
+  const isDisabled = rest.disabled ?? false;
+
   return (
-    <Pressable style={[styles.button, style]} {...rest}>
+    <Pressable
+      style={[styles.button, style, { opacity: isDisabled ? "0.4" : "1" }]}
+      {...rest}
+    >
       <Text style={styles.text}>{title}</Text>
     </Pressable>
   );

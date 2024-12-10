@@ -23,7 +23,6 @@ export const ListAlarms = () => {
             </AppleStyleSwipeableRow>
           );
         }}
-        style={{ marginTop: 24 }}
       />
     </GestureHandlerRootView>
   );

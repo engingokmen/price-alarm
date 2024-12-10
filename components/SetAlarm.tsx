@@ -23,7 +23,7 @@ export const SetAlarm = () => {
         style={styles.input}
         onChangeText={onChangeNumber}
         value={number}
-        placeholder="Alarm price"
+        placeholder="Enter price"
         keyboardType="numeric"
         autoFocus
       />
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
   input: {
     margin: 0,
     width: "100%",
+    maxWidth: 240,
     fontSize: 24,
     borderWidth: 1,
     padding: 10,
@@ -55,6 +56,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   button: {
-    marginTop: 10,
+    marginTop: 20,
   },
 });
