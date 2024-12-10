@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Button, StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { usePrice } from "@/context/priceContext";
 import { useAlarmsDispatch } from "@/context/alarmsContext";
+import Button from "./Button";
 
 export const SetAlarm = () => {
   const [number, onChangeNumber] = useState("");
@@ -11,13 +12,13 @@ export const SetAlarm = () => {
 
   const handleSubmitAlarm = () => {
     const target = Number(number);
-    if (Number.isNaN(target)) return;
+    if (!price || Number.isNaN(target)) return;
     addAlarm(target, target > price ? "above" : "below");
     onChangeNumber("");
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         onChangeText={onChangeNumber}
@@ -30,16 +31,30 @@ export const SetAlarm = () => {
         title="Set alarm"
         onPress={handleSubmitAlarm}
         disabled={number == ""}
+        style={styles.button}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    alignItems: "center",
+    textAlign: "center",
+    alignSelf: "center",
+    marginTop: 20,
+  },
   input: {
-    height: 40,
-    margin: 12,
+    margin: 0,
+    width: "100%",
+    fontSize: 24,
     borderWidth: 1,
     padding: 10,
+    borderColor: "blue",
+    borderRadius: 5,
+  },
+  button: {
+    marginTop: 10,
   },
 });

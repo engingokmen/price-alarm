@@ -1,11 +1,12 @@
 import { FlatList } from "react-native";
 import { DisplayAlarm } from "./DisplayAlarm";
-import { useAlarms } from "@/context/alarmsContext";
+import { useAlarms, useAlarmsDispatch } from "@/context/alarmsContext";
 import { AppleStyleSwipeableRow } from "./SwipeableRow";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export const ListAlarms = () => {
   const { alarms } = useAlarms();
+  const { removeAlarm } = useAlarmsDispatch();
 
   return (
     <GestureHandlerRootView style={{ width: "100%", height: "100%" }}>
@@ -13,7 +14,11 @@ export const ListAlarms = () => {
         data={alarms}
         renderItem={({ item }) => {
           return (
-            <AppleStyleSwipeableRow>
+            <AppleStyleSwipeableRow
+              onPress={() => {
+                removeAlarm(item.id);
+              }}
+            >
               <DisplayAlarm data={item} />
             </AppleStyleSwipeableRow>
           );

@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import Reanimated, {
   SharedValue,
@@ -9,8 +9,10 @@ import Reanimated, {
 
 export const AppleStyleSwipeableRow = ({
   children,
+  onPress,
 }: {
   children: ReactNode;
+  onPress: () => void;
 }) => {
   const RightAction = (
     prog: SharedValue<number>,
@@ -24,9 +26,11 @@ export const AppleStyleSwipeableRow = ({
 
     return (
       <Reanimated.View style={styleAnimation}>
-        <View style={styles.containerRightAction}>
-          <Ionicons name="trash" style={styles.rightAction} />
-        </View>
+        <Pressable onPress={onPress}>
+          <View style={styles.containerRightAction}>
+            <Ionicons name="trash" style={styles.rightAction} />
+          </View>
+        </Pressable>
       </Reanimated.View>
     );
   };
