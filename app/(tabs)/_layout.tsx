@@ -1,14 +1,16 @@
 import { Link, Tabs } from "expo-router";
 import React from "react";
-import { Platform, Text } from "react-native";
+import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
 import { HeaderRight } from "@/components/HeaderRight";
+import { useScreenOrientation } from "@/hooks/useScreenOrientation";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { isLandscape } = useScreenOrientation();
 
   return (
     <Tabs
@@ -34,6 +36,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          headerShown: !isLandscape,
+          tabBarStyle: isLandscape ? { display: "none" } : {},
           title: "Price",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons

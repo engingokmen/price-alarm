@@ -3,7 +3,7 @@
     "name": "price-alarm",
     "slug": "price-alarm",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
@@ -41,6 +41,12 @@
           "color": "#ffffff",
           "defaultChannel": "default",
           "sounds": ["./assets/sounds/sound1.wav"]
+        }
+      ],
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
         }
       ]
     ],

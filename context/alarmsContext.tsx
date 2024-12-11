@@ -12,6 +12,7 @@ import { IAlarm } from "@/types";
 import { PermissionStatus } from "expo-modules-core";
 import * as Notifications from "expo-notifications";
 import { useAsyncStorage } from "@/hooks/useAsyncStorage";
+import { Alert, Platform } from "react-native";
 
 // Context value type definition
 interface AlarmsContextType {
@@ -98,21 +99,25 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
 
     alarms.forEach((alarm) => {
       if (
-        (alarm.type === "above" && price >= alarm.price) ||
-        (alarm.type === "below" && price <= alarm.price)
+        (!alarm.isDone && alarm.type === "above" && price >= alarm.price) ||
+        (!alarm.isDone && alarm.type === "below" && price <= alarm.price)
       ) {
-        Notifications.scheduleNotificationAsync({
-          content: {
-            title: alarm.price.toString(),
-            body: `Price is now ${price}`,
-            sound: "sound1.wav",
-          },
-          trigger: null,
-        });
+        if (Platform.OS === "web") {
+          Alert.alert("Notifications are not supported on the web.");
+        } else {
+          Notifications.scheduleNotificationAsync({
+            content: {
+              title: alarm.price.toString(),
+              body: `Price is now ${price}`,
+              sound: "sound1.wav",
+            },
+            trigger: null,
+          });
+        }
         disableAlarm(alarm.id); // Optionally remove the alarm after triggering
       }
     });
-  }, [price, alarms]);
+  }, [price, alarms.length]);
 
   const alarmsValue = useMemo(() => ({ alarms }), [alarms]);
 

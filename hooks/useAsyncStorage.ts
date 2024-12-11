@@ -30,7 +30,6 @@ export const useAsyncStorage = () => {
     async function getAlarms() {
       const alarms = await getDataObj("alarms");
       if (alarms && alarms.length > 0) {
-        console.log("alarms GET", alarms);
         setAlarms(alarms);
       }
     }
@@ -40,12 +39,9 @@ export const useAsyncStorage = () => {
   //  save alarms to storage
   useEffect(() => {
     if (alarms) {
-      console.log("alarms SAVE", alarms);
       setDataObj("alarms", alarms);
     }
   }, [alarms[alarms.length - 1]?.id]);
-
-  console.log("alarms", alarms);
 
   return { alarms, setAlarms };
 };
