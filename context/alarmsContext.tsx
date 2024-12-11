@@ -45,7 +45,11 @@ Notifications.setNotificationHandler({
 });
 
 export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
-  const { alarms, setAlarms } = useAsyncStorage();
+  const { data: alarms, setData: setAlarms } = useAsyncStorage<IAlarm[]>(
+    "alarms",
+    (alarms) => alarms[alarms.length - 1]?.id,
+    []
+  );
   const [notificationPermissions, setNotificationPermissions] =
     useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
   const { price } = usePrice(); // Live price from PriceContext

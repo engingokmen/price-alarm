@@ -1,47 +1,31 @@
-import { IAlarm } from "@/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
+import { useStorageApi } from "./useStorageApi";
 
-export const useAsyncStorage = () => {
-  const [alarms, setAlarms] = useState<IAlarm[]>([]);
+export const useAsyncStorage = <T>(
+  key: string,
+  dependency: (data: T) => any,
+  initialData: T
+) => {
+  const [data, setData] = useState<T>(initialData);
+  const { getDataObj, setDataObj } = useStorageApi();
 
-  const setDataObj = async (key: string, value: object) => {
-    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem(key, jsonValue);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const getDataObj = async (key: string) => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(key);
-      const parsed = jsonValue !== null ? JSON.parse(jsonValue) : [];
-
-      return parsed;
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  //  get alarms from storage
+  //  get data from storage
   useEffect(() => {
-    async function getAlarms() {
-      const alarms = await getDataObj("alarms");
-      if (alarms && alarms.length > 0) {
-        setAlarms(alarms);
+    async function getdata() {
+      const storageData = await getDataObj(key);
+      if (storageData) {
+        setData(storageData);
       }
     }
-    getAlarms();
+    getdata();
   }, []);
 
-  //  save alarms to storage
+  //  save data to storage
   useEffect(() => {
-    if (alarms) {
-      setDataObj("alarms", alarms);
+    if (data) {
+      setDataObj(key, data);
     }
-  }, [alarms[alarms.length - 1]?.id]);
+  }, [dependency]);
 
-  return { alarms, setAlarms };
+  return { data, setData };
 };
