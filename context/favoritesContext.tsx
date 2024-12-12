@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import { useAsyncStorage } from "@/hooks/useAsyncStorage";
+import { createContext, useContext } from "react";
 
 interface FavoritesContextType {
   favorites: string[];
@@ -19,7 +20,11 @@ interface FavoritesProviderProps {
 }
 
 export const FavoritesProvider = ({ children }: FavoritesProviderProps) => {
-  const [favorites, setFavorites] = useState<Array<string>>([]);
+  const { data: favorites, setData: setFavorites } = useAsyncStorage<string[]>(
+    "favorites",
+    (favorites) => favorites[favorites.length - 1],
+    []
+  );
 
   const addFavorite = (symbol: string) => {
     setFavorites((prev) => (prev.includes(symbol) ? prev : [...prev, symbol]));

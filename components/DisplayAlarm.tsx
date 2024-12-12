@@ -8,7 +8,7 @@ export const DisplayAlarm = ({ data }: { data: IAlarm }) => {
   const color = data.type === "above" ? "green" : "red";
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, data.isDone ? { opacity: 0.4 } : {}]}>
       <DisplayPrice price={data.price} fontSize={24} />
       <Text>
         <Ionicons name={icon} size={32} color={color} />
