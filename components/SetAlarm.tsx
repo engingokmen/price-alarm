@@ -28,11 +28,12 @@ export const SetAlarm = () => {
         autoFocus
       />
       <Button
-        title="Set alarm"
         onPress={handleSubmitAlarm}
         disabled={number == ""}
         style={styles.button}
-      />
+      >
+        Set alarm
+      </Button>
     </View>
   );
 };

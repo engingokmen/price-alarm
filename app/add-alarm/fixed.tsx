@@ -1,14 +1,13 @@
 import { DisplayPrice } from "@/components/DisplayPrice";
 import { SetAlarm } from "@/components/SetAlarm";
 import { usePrice } from "@/context/priceContext";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
-export default function addAlarm() {
+export default function Fixed() {
   const { price } = usePrice();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Add alarm!</Text>
       <DisplayPrice price={price} fontSize={24} />
       <SetAlarm />
     </View>
@@ -17,11 +16,8 @@ export default function addAlarm() {
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    marginTop: 200,
   },
   title: { fontSize: 24 },
 });

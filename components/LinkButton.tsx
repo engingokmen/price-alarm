@@ -1,22 +1,22 @@
+import { Link, LinkProps } from "expo-router";
 import React, { ReactNode } from "react";
-import { Text, StyleSheet, Pressable, PressableProps } from "react-native";
+import { Text, StyleSheet } from "react-native";
 
-interface ButtonProps extends PressableProps {
-  onPress?: () => void;
+interface LinkProperties extends LinkProps {
   children?: ReactNode;
 }
 
-export default function Button(props: ButtonProps) {
+export default function LinkButton(props: LinkProperties) {
   const { children = "Save", style = {} as any, ...rest } = props;
   const isDisabled = rest.disabled ?? false;
 
   return (
-    <Pressable
+    <Link
       style={[styles.button, style, { opacity: isDisabled ? "0.4" : "1" }]}
       {...rest}
     >
       <Text style={styles.text}>{children}</Text>
-    </Pressable>
+    </Link>
   );
 }
 

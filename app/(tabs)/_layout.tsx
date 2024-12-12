@@ -53,7 +53,7 @@ export default function TabLayout() {
         options={{
           title: "Alarms",
           headerRight: () => (
-            <Link href="/add-alarm" style={{ marginRight: 20 }}>
+            <Link href="/add-alarm/fixed" style={{ marginRight: 20 }}>
               <Ionicons name="add" size={24} color="white" />
             </Link>
           ),
