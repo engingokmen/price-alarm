@@ -1,14 +1,30 @@
 import LinkButton from "@/components/LinkButton";
-import { Slot } from "expo-router";
+import { Slot, usePathname } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
 export default function HomeLayout() {
+  const path = usePathname();
   return (
     <View style={styles.container}>
       <View style={styles.linkContainer}>
-        <LinkButton href="/add-alarm/fixed">Fixed</LinkButton>
-        <LinkButton href="/add-alarm/ratio">Ratio</LinkButton>
-        <LinkButton href="/add-alarm/automated">Auto</LinkButton>
+        <LinkButton
+          href="/add-alarm/fixed"
+          disabled={path === "/add-alarm/fixed"}
+        >
+          Fixed
+        </LinkButton>
+        <LinkButton
+          href="/add-alarm/ratio"
+          disabled={path === "/add-alarm/ratio"}
+        >
+          Ratio
+        </LinkButton>
+        <LinkButton
+          href="/add-alarm/automated"
+          disabled={path === "/add-alarm/automated"}
+        >
+          Auto
+        </LinkButton>
       </View>
       <Slot />
     </View>
