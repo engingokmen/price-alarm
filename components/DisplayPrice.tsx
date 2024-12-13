@@ -1,4 +1,5 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { formattedPrice } from "@/utilities/formattedNumber";
 import { ReactNode } from "react";
 import { Text } from "react-native";
 
@@ -19,12 +20,7 @@ export const DisplayPrice = ({
   style = {},
 }: DisplayPriceProps) => {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "price");
-  const formattedNumber = price
-    ? new Intl.NumberFormat("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(price)
-    : "0.00";
+  const formattedNumber = price ? formattedPrice(price) : "0.00";
 
   return <Text style={[{ fontSize, color }, style]}>{formattedNumber}</Text>;
 };

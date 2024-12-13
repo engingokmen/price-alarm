@@ -8,9 +8,6 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "backgroundFetch": {
-      "mode": "background-fetch"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "price-alarm",

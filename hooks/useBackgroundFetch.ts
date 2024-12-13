@@ -1,19 +1,30 @@
 import { useEffect } from "react";
 import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
+import * as Notifications from "expo-notifications";
+import { formattedPrice } from "@/utilities/formattedNumber";
 
-const BACKGROUND_FETCH_TASK = "background-fetch";
+const BACKGROUND_FETCH_TASK = "price-fetch";
 
 // 1. Define the task by providing a name and the function that should be executed
 // Note: This needs to be called in the global scope (e.g outside of your React components)
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
-  const now = Date.now();
-
-  console.log(
-    `Got background fetch call at date: ${new Date(now).toISOString()}`
+  const data = await fetch(
+    "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT"
   );
 
+  const json = await data.json();
+  const price = formattedPrice(json.price);
+
   // Be sure to return the successful result type!
+  Notifications.scheduleNotificationAsync({
+    content: {
+      title: `${price}`,
+      body: `FROM BACKGROUND FETCH`,
+      sound: "sound1.wav",
+    },
+    trigger: null,
+  });
   return BackgroundFetch.BackgroundFetchResult.NewData;
 });
 
@@ -22,8 +33,7 @@ TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
 // Note: This does NOT need to be in the global scope and CAN be used in your React components!
 async function registerBackgroundFetchAsync() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_TASK, {
-    minimumInterval: 3,
-    // 60 * 15, // 15 minutes
+    minimumInterval: 60 * 1, // 1 minute
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
   });
@@ -33,36 +43,15 @@ async function registerBackgroundFetchAsync() {
 // This will cancel any future background fetch calls that match the given name
 // Note: This does NOT need to be in the global scope and CAN be used in your React components!
 async function unregisterBackgroundFetchAsync() {
-  return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
+  //   return BackgroundFetch.unregisterTaskAsync(BACKGROUND_FETCH_TASK);
 }
 
 export const useBackgroundFetch = () => {
-  //   useEffect(() => {
-  //     checkStatusAsync();
-  //   }, []);
-
-  //   const checkStatusAsync = async () => {
-  //     const status = await BackgroundFetch.getStatusAsync();
-  //     const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_TASK);
-  //     setStatus(status);
-  //     setIsRegistered(isRegistered);
-  //   };
-
-  //   const toggleFetchTask = async () => {
-  //     if (isRegistered) {
-  //       await unregisterBackgroundFetchAsync();
-  //     } else {
-  //       await registerBackgroundFetchAsync();
-  //     }
-
-  //     checkStatusAsync();
-  //   };
-
   useEffect(() => {
-    unregisterBackgroundFetchAsync();
-
-    return () => {
-      registerBackgroundFetchAsync();
-    };
+    console.log(
+      "useBackgroundFetch",
+      TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)
+    );
+    registerBackgroundFetchAsync();
   }, []);
 };

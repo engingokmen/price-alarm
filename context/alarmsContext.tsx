@@ -92,6 +92,7 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    console.log("notificationPermissions", notificationPermissions);
     if (notificationPermissions !== PermissionStatus.GRANTED) return;
     const listener =
       Notifications.addNotificationReceivedListener(handleNotification);
