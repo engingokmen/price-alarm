@@ -8,9 +8,15 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "backgroundFetch": {
+      "mode": "background-fetch"
+    },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "price-alarm"
+      "bundleIdentifier": "price-alarm",
+      "infoPlist": {
+        "UIBackgroundModes": ["fetch"]
+      }
     },
     "android": {
       "adaptiveIcon": {

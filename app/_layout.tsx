@@ -4,9 +4,11 @@ import { CoinsProvider } from "@/context/coinsContext";
 import { FavoritesProvider } from "@/context/favoritesContext";
 import { FiltersProvider } from "@/context/filterContext";
 import { PriceProvider } from "@/context/priceContext";
+import { useBackgroundFetch } from "@/hooks/backgroundTask";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
+  useBackgroundFetch();
   return (
     <PriceProvider>
       <AlarmsProvider>
