@@ -5,10 +5,12 @@ import { FavoritesProvider } from "@/context/favoritesContext";
 import { FiltersProvider } from "@/context/filterContext";
 import { PriceProvider } from "@/context/priceContext";
 import { useBackgroundFetch } from "@/hooks/useBackgroundFetch";
+import { usePushNotificationRegistration } from "@/hooks/usePushNotificationRegistration";
 import { Stack } from "expo-router";
 
 export default function RootLayout() {
-  useBackgroundFetch();
+  // useBackgroundFetch();
+  // usePushNotificationRegistration();
 
   return (
     <PriceProvider>
