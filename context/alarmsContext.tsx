@@ -13,6 +13,8 @@ import { PermissionStatus } from "expo-modules-core";
 import * as Notifications from "expo-notifications";
 import { useAsyncStorage } from "@/hooks/useAsyncStorage";
 import { Alert, Platform } from "react-native";
+import { api } from "@/api";
+import { useAppContext } from "./appContext";
 
 // Context value type definition
 interface AlarmsContextType {
@@ -53,6 +55,7 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
   const [notificationPermissions, setNotificationPermissions] =
     useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
   const { price } = usePrice(); // Live price from PriceContext
+  const { expoPushToken } = useAppContext();
 
   const addAlarm = useCallback((price: number, type: "above" | "below") => {
     const newAlarm: IAlarm = {
@@ -86,6 +89,13 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
     const { title } = notification.request.content;
     console.warn(title);
   };
+
+  useEffect(() => {
+    if (!expoPushToken) return;
+    api.getAlarms(expoPushToken).then((alarms) => {
+      console.log("alarms", alarms);
+    });
+  }, [expoPushToken]);
 
   useEffect(() => {
     requestNotificationPermissions();
