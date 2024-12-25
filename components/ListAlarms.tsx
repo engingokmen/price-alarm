@@ -16,7 +16,9 @@ export const ListAlarms = () => {
           return (
             <AppleStyleSwipeableRow
               onPress={() => {
-                removeAlarm(item.id);
+                if (item._id) {
+                  removeAlarm(item._id);
+                }
               }}
             >
               <DisplayAlarm data={item} />

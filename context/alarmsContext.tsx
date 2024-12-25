@@ -4,17 +4,12 @@ import React, {
   useContext,
   useEffect,
   ReactNode,
-  useCallback,
   useMemo,
 } from "react";
-import { usePrice } from "./priceContext"; // Assuming you're using a PriceContext for price updates
 import { IAlarm } from "@/types";
 import { PermissionStatus } from "expo-modules-core";
 import * as Notifications from "expo-notifications";
-import { useAsyncStorage } from "@/hooks/useAsyncStorage";
-import { Alert, Platform } from "react-native";
-import { api } from "@/api";
-import { useAppContext } from "./appContext";
+import { useUserAlarms } from "@/hooks/useUserAlarms";
 
 // Context value type definition
 interface AlarmsContextType {
@@ -23,7 +18,8 @@ interface AlarmsContextType {
 
 interface AlarmsDispatchContextType {
   addAlarm: (price: number, type: "above" | "below") => void;
-  removeAlarm: (id: number) => void;
+  disableAlarm: (id: string | undefined) => void;
+  removeAlarm: (id: string) => void;
 }
 
 const AlarmsContext = createContext<AlarmsContextType | undefined>(undefined);
@@ -47,37 +43,29 @@ Notifications.setNotificationHandler({
 });
 
 export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
-  const { data: alarms, setData: setAlarms } = useAsyncStorage<IAlarm[]>(
-    "alarms",
-    (alarms) => alarms[alarms.length - 1]?.id,
-    []
-  );
+  const { alarms, save, update, remove } = useUserAlarms();
   const [notificationPermissions, setNotificationPermissions] =
     useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
-  const { price } = usePrice(); // Live price from PriceContext
-  const { expoPushToken } = useAppContext();
 
-  const addAlarm = useCallback((price: number, type: "above" | "below") => {
+  const addAlarm = (price: number, type: "above" | "below") => {
     const newAlarm: IAlarm = {
-      id: Date.now(),
       price,
       type,
       isDone: false,
     };
-    setAlarms((prevAlarms) => [...prevAlarms, newAlarm]);
-  }, []);
+    save(newAlarm);
+  };
 
-  const removeAlarm = useCallback((id: number) => {
-    setAlarms((prevAlarms) => prevAlarms.filter((alarm) => alarm.id !== id));
-  }, []);
+  const removeAlarm = (id: string) => {
+    remove(id);
+  };
 
-  const disableAlarm = useCallback((id: number) => {
-    setAlarms((prevAlarms) =>
-      prevAlarms.map((alarm) =>
-        alarm.id === id ? { ...alarm, isDone: true } : alarm
-      )
-    );
-  }, []);
+  const disableAlarm = (id: string | undefined) => {
+    const prevAlarm = alarms.find((alarm) => alarm._id === id);
+    if (prevAlarm) {
+      update({ ...prevAlarm, isDone: true });
+    }
+  };
 
   const requestNotificationPermissions = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
@@ -91,54 +79,23 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!expoPushToken) return;
-    api.getAlarms(expoPushToken).then((alarms) => {
-      console.log("alarms", alarms);
-    });
-  }, [expoPushToken]);
-
-  useEffect(() => {
     requestNotificationPermissions();
   }, []);
 
   useEffect(() => {
-    console.log("notificationPermissions", notificationPermissions);
     if (notificationPermissions !== PermissionStatus.GRANTED) return;
     const listener =
       Notifications.addNotificationReceivedListener(handleNotification);
     return () => listener.remove();
   }, [notificationPermissions]);
 
-  useEffect(() => {
-    if (price === null) return;
-
-    alarms.forEach((alarm) => {
-      if (
-        (!alarm.isDone && alarm.type === "above" && price >= alarm.price) ||
-        (!alarm.isDone && alarm.type === "below" && price <= alarm.price)
-      ) {
-        if (Platform.OS === "web") {
-          Alert.alert("Notifications are not supported on the web.");
-        } else {
-          Notifications.scheduleNotificationAsync({
-            content: {
-              title: alarm.price.toString(),
-              body: `Price is now ${price}`,
-              sound: "sound1.wav",
-            },
-            trigger: null,
-          });
-        }
-        disableAlarm(alarm.id); // Optionally remove the alarm after triggering
-      }
-    });
-  }, [price, alarms.length]);
-
   const alarmsValue = useMemo(() => ({ alarms }), [alarms]);
 
   return (
     <AlarmsContext.Provider value={alarmsValue}>
-      <AlarmsDispatchContext.Provider value={{ addAlarm, removeAlarm }}>
+      <AlarmsDispatchContext.Provider
+        value={{ addAlarm, disableAlarm, removeAlarm }}
+      >
         {children}
       </AlarmsDispatchContext.Provider>
     </AlarmsContext.Provider>

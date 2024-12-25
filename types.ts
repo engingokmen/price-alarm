@@ -1,5 +1,5 @@
 export interface IAlarm {
-  id: number;
+  _id?: string;
   price: number;
   type: "above" | "below";
   isDone: boolean;

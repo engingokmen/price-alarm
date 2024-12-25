@@ -1,14 +1,53 @@
+const HOST = process.env.EXPO_PUBLIC_HOST;
+
 const getAlarms = async (pushToken: string = "") => {
-  const response = await fetch(`${process.env.EXPO_PUBLIC_HOST}/alarm`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+  const response = await fetch(
+    `${HOST}/alarm?${new URLSearchParams({
       pushToken,
-    }),
-  });
-  const json = await response.body;
+    }).toString()}`
+  );
+  const json = await response.json();
   return json;
 };
 
-export const api = { getAlarms };
+const saveAlarm = async (pushToken: string = "", alarm: any) => {
+  const response = await fetch(`${HOST}/alarm`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ pushToken, alarm }),
+  });
+  const json = await response.json();
+  return json;
+};
+
+const updateAlarm = async (pushToken: string = "", alarm: any) => {
+  try {
+    const response = await fetch(`${HOST}/alarm`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pushToken, alarm }),
+    });
+    const json = await response.json();
+    return json;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+const removeAlarm = async (pushToken: string = "", id: string) => {
+  const response = await fetch(`${HOST}/alarm`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ pushToken, id }),
+  });
+  const json = await response.json();
+  return json;
+};
+
+export const api = { getAlarms, saveAlarm, updateAlarm, removeAlarm };

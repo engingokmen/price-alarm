@@ -48,10 +48,6 @@ async function unregisterBackgroundFetchAsync() {
 
 export const useBackgroundFetch = () => {
   useEffect(() => {
-    console.log(
-      "useBackgroundFetch",
-      TaskManager.isTaskDefined(BACKGROUND_FETCH_TASK)
-    );
     registerBackgroundFetchAsync();
   }, []);
 };

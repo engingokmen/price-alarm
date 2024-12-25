@@ -37,7 +37,6 @@ async function registerForPushNotificationsAsync() {
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
 
-    console.log("projectId", projectId);
     if (!projectId) {
       handleRegistrationError("Project ID not found");
     }
@@ -47,7 +46,6 @@ async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
-      console.log(pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
       handleRegistrationError(`${e}`);
@@ -66,14 +64,12 @@ export const usePushNotificationRegistration = () => {
   const responseListener = useRef<Notifications.EventSubscription>();
 
   useEffect(() => {
-    console.log("registering for push notifications");
     registerForPushNotificationsAsync()
       .then((token) => setExpoPushToken(token ?? ""))
       .catch((error: any) => setExpoPushToken(`${error}`));
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        console.log("notification", notification);
         setNotification(notification);
       });
 
