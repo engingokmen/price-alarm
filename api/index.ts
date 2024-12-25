@@ -1,4 +1,4 @@
-const HOST = process.env.EXPO_PUBLIC_HOST;
+const HOST = "https://price-alarm.engingokmen.com";
 
 const getAlarms = async (pushToken: string = "") => {
   const response = await fetch(

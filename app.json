@@ -2,7 +2,7 @@
   "expo": {
     "name": "price-alarm",
     "slug": "price-alarm",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "orientation": "default",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
