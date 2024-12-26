@@ -1,14 +1,16 @@
 import { DisplayPrice } from "@/components/DisplayPrice";
 import { SetAlarm } from "@/components/SetAlarm";
 import { usePrice } from "@/context/priceContext";
-import { StyleSheet, View } from "react-native";
+import { Keyboard, Pressable, StyleSheet, View } from "react-native";
 
 export default function Fixed() {
   const { price } = usePrice();
 
   return (
     <View style={styles.container}>
-      <DisplayPrice price={price} fontSize={24} />
+      <Pressable onPress={() => Keyboard.dismiss()}>
+        <DisplayPrice price={price} fontSize={24} />
+      </Pressable>
       <SetAlarm />
     </View>
   );

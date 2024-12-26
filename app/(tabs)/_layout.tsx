@@ -1,11 +1,9 @@
-import { Link, Tabs } from "expo-router";
-import React from "react";
+import { Tabs } from "expo-router";
 import { Platform } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
-import { HeaderRight } from "@/components/HeaderRight";
 import { useScreenOrientation } from "@/hooks/useScreenOrientation";
 
 export default function TabLayout() {
@@ -15,6 +13,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
+        tabBarHideOnKeyboard: false,
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerStyle: {
           backgroundColor: "#f4511e",
@@ -52,11 +51,6 @@ export default function TabLayout() {
         name="alarms"
         options={{
           title: "Alarms",
-          headerRight: () => (
-            <Link href="/add-alarm/fixed" style={{ marginRight: 20 }}>
-              <Ionicons name="add" size={24} color="white" />
-            </Link>
-          ),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               size={28}
@@ -67,10 +61,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="coins"
+        name="add-alarm"
         options={{
-          title: "Coins",
-          headerRight: () => <HeaderRight />,
+          title: "Add alarm",
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               size={28}

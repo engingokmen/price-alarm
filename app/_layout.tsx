@@ -22,14 +22,7 @@ export default function RootLayout() {
                   }}
                 >
                   {/* Optionally configure static options outside the route.*/}
-                  {/* <Stack.Screen name="home" options={{}} /> */}
                   <Stack.Screen name="(tabs)" />
-                  <Stack.Screen
-                    name="add-alarm"
-                    options={{
-                      presentation: "modal",
-                    }}
-                  />
                 </Stack>
               </CoinsProvider>
             </FiltersProvider>
