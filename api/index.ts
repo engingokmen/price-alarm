@@ -11,6 +11,7 @@ const getAlarms = async (pushToken: string = "") => {
 };
 
 const saveAlarm = async (pushToken: string = "", alarm: any) => {
+  try {
   const response = await fetch(`${HOST}/alarm`, {
     method: "POST",
     headers: {
@@ -20,6 +21,9 @@ const saveAlarm = async (pushToken: string = "", alarm: any) => {
   });
   const json = await response.json();
   return json;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const updateAlarm = async (pushToken: string = "", alarm: any) => {
