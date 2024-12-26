@@ -6,7 +6,7 @@ import { useCoinsFiltered } from "@/context/coinsContext";
 import { useFavorites } from "@/context/favoritesContext";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
-export default function Alarms() {
+export default function Coins() {
   const { coins } = useCoinsFiltered();
   const { isFavorite } = useFavorites();
 
