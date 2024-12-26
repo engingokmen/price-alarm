@@ -3,7 +3,6 @@ import { DisplayPrice } from "@/components/DisplayPrice";
 import { usePrice } from "@/context/priceContext";
 import { StyleSheet, View } from "react-native";
 import { activateKeepAwakeAsync, deactivateKeepAwake } from "expo-keep-awake";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { useScreenOrientation } from "@/hooks/useScreenOrientation";
 
 export default function Price() {
@@ -18,21 +17,15 @@ export default function Price() {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <View>
-          <DisplayPrice price={price} fontSize={isLandscape ? 124 : 64} />
-        </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <View style={styles.container}>
+      <DisplayPrice price={price} fontSize={isLandscape ? 124 : 64} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
-    display: "flex",
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
