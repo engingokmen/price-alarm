@@ -10,6 +10,7 @@ import { IAlarm } from "@/types";
 import { PermissionStatus } from "expo-modules-core";
 import * as Notifications from "expo-notifications";
 import { useUserAlarms } from "@/hooks/useUserAlarms";
+import Toast from "react-native-toast-message";
 
 // Context value type definition
 interface AlarmsContextType {
@@ -17,7 +18,10 @@ interface AlarmsContextType {
 }
 
 interface AlarmsDispatchContextType {
-  addAlarm: (price: number, type: "above" | "below") => void;
+  addAlarm: (
+    price: number,
+    type: "above" | "below"
+  ) => Promise<IAlarm[] | void>;
   disableAlarm: (id: string | undefined) => void;
   removeAlarm: (id: string) => void;
 }
@@ -38,6 +42,7 @@ Notifications.setNotificationHandler({
       shouldShowAlert: true,
       shouldPlaySound: true,
       shouldSetBadge: true,
+      sound: "sound1.wav",
     };
   },
 });
@@ -47,13 +52,23 @@ export const AlarmsProvider: React.FC<AlarmsProviderProps> = ({ children }) => {
   const [notificationPermissions, setNotificationPermissions] =
     useState<PermissionStatus>(PermissionStatus.UNDETERMINED);
 
-  const addAlarm = (price: number, type: "above" | "below") => {
-    const newAlarm: IAlarm = {
-      price,
-      type,
-      isDone: false,
-    };
-    save(newAlarm);
+  const addAlarm = async (price: number, type: "above" | "below") => {
+    try {
+      const newAlarm: IAlarm = {
+        price,
+        type,
+        isDone: false,
+      };
+      if (checkDuplicateAlarms(alarms, newAlarm)) {
+        throw new Error("Alarm already exists !");
+      }
+      return await save(newAlarm);
+    } catch (e) {
+      Toast.show({
+        type: "error",
+        text1: (e as Error)?.message,
+      });
+    }
   };
 
   const removeAlarm = (id: string) => {
@@ -116,4 +131,8 @@ export const useAlarmsDispatch = (): AlarmsDispatchContextType => {
     throw new Error("useAlarmsDispatch must be used within an AlarmsProvider");
   }
   return context;
+};
+
+const checkDuplicateAlarms = (alarms: IAlarm[], newAlarm: IAlarm) => {
+  return alarms?.some((alarm) => alarm.price === newAlarm.price) ?? false;
 };

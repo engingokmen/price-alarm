@@ -1,4 +1,4 @@
-const HOST = "https://price-alarm.engingokmen.com";
+import { HOST } from "@/settings";
 
 const getAlarms = async (pushToken: string = "") => {
   const response = await fetch(
@@ -12,15 +12,15 @@ const getAlarms = async (pushToken: string = "") => {
 
 const saveAlarm = async (pushToken: string = "", alarm: any) => {
   try {
-  const response = await fetch(`${HOST}/alarm`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ pushToken, alarm }),
-  });
-  const json = await response.json();
-  return json;
+    const response = await fetch(`${HOST}/alarm`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ pushToken, alarm }),
+    });
+    const json = await response.json();
+    return json;
   } catch (e) {
     console.error(e);
   }

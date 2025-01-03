@@ -1,5 +1,6 @@
+import { useColors } from "@/hooks/useColors";
 import { Ionicons } from "@expo/vector-icons";
-import React, { ReactNode } from "react";
+import { ReactNode, useRef } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import Reanimated, {
@@ -24,9 +25,14 @@ export const AppleStyleSwipeableRow = ({
       };
     });
 
+    const handlePress = () => {
+      onPress();
+      ref.current.close();
+    };
+
     return (
       <Reanimated.View style={styleAnimation}>
-        <Pressable onPress={onPress}>
+        <Pressable onPress={handlePress}>
           <View style={styles.containerRightAction}>
             <Ionicons name="trash" style={styles.rightAction} />
           </View>
@@ -35,9 +41,13 @@ export const AppleStyleSwipeableRow = ({
     );
   };
 
+  const ref = useRef<any>();
+  const colors = useColors();
+
   return (
     <ReanimatedSwipeable
-      containerStyle={styles.swipeable}
+      ref={ref}
+      containerStyle={[styles.swipeable, { backgroundColor: colors.swipeable }]}
       friction={2}
       enableTrackpadTwoFingerGesture
       rightThreshold={40}
@@ -69,7 +79,6 @@ const styles = StyleSheet.create({
   swipeable: {
     width: "100%",
     height: 100,
-    backgroundColor: "papayawhip",
     alignItems: "center",
   },
 });

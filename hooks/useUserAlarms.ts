@@ -27,6 +27,7 @@ export const useUserAlarms = () => {
     try {
       const alarms = await api.saveAlarm(expoPushToken, alarm);
       setAlarms(alarms);
+      return alarms;
     } catch (e) {
       console.error(e);
     }

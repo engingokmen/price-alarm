@@ -1,7 +1,8 @@
+import { usePrice } from "@/context/priceContext";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { formattedPrice } from "@/utilities/formattedNumber";
 import { ReactNode } from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 interface DisplayPriceProps {
   price: number | null;
@@ -9,7 +10,9 @@ interface DisplayPriceProps {
   lightColor?: string;
   darkColor?: string;
   children?: ReactNode;
-  style?: object;
+  textStyle?: object;
+  unit?: string;
+  hideUnit?: boolean;
 }
 
 export const DisplayPrice = ({
@@ -17,10 +20,25 @@ export const DisplayPrice = ({
   fontSize = 42,
   lightColor,
   darkColor,
-  style = {},
+  textStyle = {},
+  unit,
+  hideUnit = false,
 }: DisplayPriceProps) => {
+  const { priceUnit } = usePrice();
+  const _unit = unit ?? priceUnit;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "price");
   const formattedNumber = price ? formattedPrice(price) : "0.00";
 
-  return <Text style={[{ fontSize, color }, style]}>{formattedNumber}</Text>;
+  return (
+    <View
+      style={{
+        alignItems: "center",
+        flexDirection: "column",
+        gap: 8,
+      }}
+    >
+      {!hideUnit && <Text>{_unit}</Text>}
+      <Text style={[{ fontSize, color }, textStyle]}>{formattedNumber}</Text>
+    </View>
+  );
 };
